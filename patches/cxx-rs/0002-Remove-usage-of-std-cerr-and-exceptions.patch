@@ -1,0 +1,36 @@
+From d363e8e62f75999131bdacc9fe4941366ea4a3be Mon Sep 17 00:00:00 2001
+From: topjohnwu <topjohnwu@gmail.com>
+Date: Thu, 30 Jun 2022 00:43:54 -0700
+Subject: [PATCH] Remove usage of std::cerr and exceptions
+
+- Usage of std::err significantly increases binary size
+- Exceptions are not allowed in the parent project
+---
+ src/cxx.cc | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
+
+diff --git a/src/cxx.cc b/src/cxx.cc
+index 1601a05ab..bbd84f66d 100644
+--- a/src/cxx.cc
++++ b/src/cxx.cc
+@@ -1,4 +1,5 @@
+ #include "../include/cxx.h"
++#include <cstdio>
+ #include <cstring>
+ #include <iostream>
+ #include <memory>
+@@ -75,12 +76,8 @@ inline namespace cxxbridge1 {
+ 
+ template <typename Exception>
+ void panic [[noreturn]] (const char *msg) {
+-#if defined(RUST_CXX_NO_EXCEPTIONS)
+-  std::cerr << "Error: " << msg << ". Aborting." << std::endl;
+-  std::terminate();
+-#else
+-  throw Exception(msg);
+-#endif
++  std::printf("Error: %s. Aborting.\n", msg);
++  std::abort();
+ }
+ 
+ template void panic<std::out_of_range> [[noreturn]] (const char *msg);

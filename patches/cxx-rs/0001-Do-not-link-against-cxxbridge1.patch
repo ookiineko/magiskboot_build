@@ -1,0 +1,61 @@
+From fada48e76a746820db2f94eafe96a1f52eebbb60 Mon Sep 17 00:00:00 2001
+From: topjohnwu <topjohnwu@gmail.com>
+Date: Thu, 30 Jun 2022 00:43:31 -0700
+Subject: [PATCH] Do not link against cxxbridge1
+
+This will be handled in the parent project
+---
+ Cargo.toml | 4 ++--
+ build.rs   | 6 +++---
+ 2 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/Cargo.toml b/Cargo.toml
+index 22700ddd..adc9ac76 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -10,7 +10,7 @@ exclude = ["/demo", "/gen", "/syntax", "/third-party", "/tools/buck/prelude"]
+ homepage = "https://cxx.rs"
+ keywords = ["ffi", "c++"]
+ license = "MIT OR Apache-2.0"
+-links = "cxxbridge1"
++# links = "cxxbridge1"
+ repository = "https://github.com/dtolnay/cxx"
+ rust-version = "1.60"
+ 
+@@ -24,7 +24,7 @@ std = ["alloc"]
+ 
+ [dependencies]
+ cxxbridge-macro = { version = "=1.0.92", path = "macro" }
+-link-cplusplus = "1.0"
++# link-cplusplus = "1.0"
+ 
+ [build-dependencies]
+ cc = "1.0.49"
+diff --git a/build.rs b/build.rs
+index 9158b1c8..ba34e48c 100644
+--- a/build.rs
++++ b/build.rs
+@@ -1,9 +1,9 @@
+ use std::env;
+-use std::path::Path;
++// use std::path::Path;
+ use std::process::Command;
+ 
+ fn main() {
+-    cc::Build::new()
++    /* cc::Build::new()
+         .file("src/cxx.cc")
+         .cpp(true)
+         .cpp_link_stdlib(None) // linked via link-cplusplus crate
+@@ -18,7 +18,7 @@ fn main() {
+     if let Some(manifest_dir) = env::var_os("CARGO_MANIFEST_DIR") {
+         let cxx_h = Path::new(&manifest_dir).join("include").join("cxx.h");
+         println!("cargo:HEADER={}", cxx_h.to_string_lossy());
+-    }
++    } */
+ 
+     if let Some(rustc) = rustc_version() {
+         if rustc.minor < 60 {
+-- 
+2.39.2
+
