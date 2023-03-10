@@ -24,6 +24,12 @@ endif()
 # files are changed in vendor projects those can be retained with this option.
 option(PATCH_VENDOR_PROJECTS "Patch vendor projects using patches directory" ON)
 
+# Option to enable or disable building static linked version of magiskboot.
+# If enabled, the build result will be a standalone binary which you can run
+# on any device with the same operating system and architecture.
+# This requires installing depended static libraries on the host.
+option(PREFER_STATIC_LINKING "Prefer static libraries when linking" OFF)
+
 include(CMakeLists.android.txt)
 include(CMakeLists.magisk.txt)
 
@@ -31,11 +37,32 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 find_package(PkgConfig REQUIRED)
 find_package(LibLZMA REQUIRED)
-pkg_check_modules(liblz4 REQUIRED IMPORTED_TARGET liblz4)
 find_package(BZip2 REQUIRED)
-find_package(LIBFDT REQUIRED)
 pkg_check_modules(zlib REQUIRED IMPORTED_TARGET zlib)
 pkg_check_modules(libbsd REQUIRED IMPORTED_TARGET libbsd)
+
+if (PREFER_STATIC_LINKING)
+    set(LIBLZMA_NAME lzma)
+    set(LIBLZ4_NAME liblz4)
+    set(LIBBZ2_NAME bz2)
+    set(LIBFDT_NAME libfdt)
+    set(LIBZ_NAME z)
+    set(LIBBSD_NAME bsd md)
+    set(PTHREAD_NAME pthread)
+    set(EXTRA_LINKER_FLAGS -static)
+else()
+    pkg_check_modules(liblz4 REQUIRED IMPORTED_TARGET liblz4)
+    find_package(LIBFDT REQUIRED)
+
+    set(LIBLZMA_NAME ${LIBLZMA_LIBRARIES})
+    set(LIBLZ4_NAME PkgConfig::liblz4)
+    set(LIBBZ2_NAME ${BZIP2_LIBRARIES})
+    set(LIBFDT_NAME ${LIBFDT_LIBRARIES})
+    set(LIBZ_NAME PkgConfig::zlib)
+    set(LIBBSD_NAME PkgConfig::libbsd)
+    set(PTHREAD_NAME Threads::Threads)
+    set(EXTRA_LINKER_FLAGS "")
+endif()
 
 add_compile_options(-Wall)
 
@@ -53,8 +80,7 @@ set(CPACK_SOURCE_IGNORE_FILES "/patches/" "/build/" "/.git/"
     "/vendor/Magisk/gradle/" "/vendor/Magisk/scripts/" "/vendor/Magisk/stub/"
     "/vendor/Magisk/tools/" "/vendor/Magisk/native/src/external/busybox/"
     "/vendor/Magisk/native/src/external/bzip2/" "/vendor/Magisk/native/src/external/cxx-rs/"
-    "/vendor/Magisk/native/src/external/dtc/" "/vendor/Magisk/native/src/external/libcxx/"
-    "/vendor/Magisk/native/src/external/lsplt/" "/vendor/Magisk/native/src/external/lz4/"
+    "/vendor/Magisk/native/src/external/libcxx/" "/vendor/Magisk/native/src/external/lsplt/"
     "/vendor/Magisk/native/src/external/nanopb/" "/vendor/Magisk/native/src/external/parallel-hashmap/"
     "/vendor/Magisk/native/src/external/pcre/" "/vendor/Magisk/native/src/external/selinux/"
     "/vendor/Magisk/native/src/external/systemproperties/" "/vendor/Magisk/native/src/external/xz/"

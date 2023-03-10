@@ -36,4 +36,4 @@ add_library(android_libbase STATIC
     vendor/android_libbase/errors_unix.cpp)
 target_include_directories(android_libbase PUBLIC
     vendor/android_libbase/include vendor/android_core/include)
-target_link_libraries(android_libbase PUBLIC fmt::fmt android_liblog)
+target_link_libraries(android_libbase PUBLIC fmt::fmt android_liblog ${EXTRA_LINKER_FLAGS})

@@ -11,7 +11,7 @@ target_include_directories(libbase PUBLIC
     vendor/Magisk/native/src/include
     vendor/Magisk/native/src/base/include)
 target_compile_options(libbase PRIVATE -O3 -include ${CMAKE_CURRENT_SOURCE_DIR}/fortify.h)
-target_link_libraries(libbase PkgConfig::libbsd android_liblog)
+target_link_libraries(libbase ${LIBBSD_NAME} android_liblog ${EXTRA_LINKER_FLAGS})
 
 add_library(libmincrypt STATIC
     vendor/Magisk/native/src/external/mincrypt/dsa_sig.c
@@ -42,6 +42,29 @@ target_include_directories(libzopfli PUBLIC
 target_compile_options(libzopfli PRIVATE
     -Wall -Werror -Wno-unused -Wno-unused-parameter)
 
+if (PREFER_STATIC_LINKING)
+    add_library(libfdt STATIC
+        vendor/Magisk/native/src/external/dtc/libfdt/fdt.c
+        vendor/Magisk/native/src/external/dtc/libfdt/fdt_addresses.c
+        vendor/Magisk/native/src/external/dtc/libfdt/fdt_empty_tree.c
+        vendor/Magisk/native/src/external/dtc/libfdt/fdt_overlay.c
+        vendor/Magisk/native/src/external/dtc/libfdt/fdt_ro.c
+        vendor/Magisk/native/src/external/dtc/libfdt/fdt_rw.c
+        vendor/Magisk/native/src/external/dtc/libfdt/fdt_strerror.c
+        vendor/Magisk/native/src/external/dtc/libfdt/fdt_sw.c
+        vendor/Magisk/native/src/external/dtc/libfdt/fdt_wip.c)
+    target_include_directories(libfdt PUBLIC
+        vendor/Magisk/native/src/external/dtc/libfdt)
+
+    add_library(liblz4 STATIC
+        vendor/Magisk/native/src/external/lz4/lib/lz4.c
+        vendor/Magisk/native/src/external/lz4/lib/lz4frame.c
+        vendor/Magisk/native/src/external/lz4/lib/lz4hc.c
+        vendor/Magisk/native/src/external/lz4/lib/xxhash.c)
+    target_include_directories(liblz4 PUBLIC
+        vendor/Magisk/native/src/external/lz4/lib)
+endif()
+
 add_executable(magiskboot
     vendor/Magisk/native/src/boot/main.cpp
     vendor/Magisk/native/src/boot/bootimg.cpp
@@ -54,17 +77,21 @@ add_executable(magiskboot
     vendor/Magisk/native/src/boot/cpio.cpp)
 target_include_directories(magiskboot PRIVATE
     ${LIBLZMA_INCLUDE_DIRS}
-    ${BZIP2_INCLUDE_DIRS}
+    ${BZIP2_INCLUDE_DIRS})
+if (NOT PREFER_STATIC_LINKING)
+target_include_directories(magiskboot PRIVATE
     ${LIBFDT_INCLUDE_DIRS})
+endif()
 target_link_libraries(magiskboot
     libbase
     libmincrypt
-    ${LIBLZMA_LIBRARIES}
-    PkgConfig::liblz4
-    ${BZIP2_LIBRARIES}
-    ${LIBFDT_LIBRARIES}
-    PkgConfig::zlib
+    ${LIBLZMA_NAME}
+    ${LIBLZ4_NAME}
+    ${LIBBZ2_NAME}
+    ${LIBFDT_NAME}
+    ${LIBZ_NAME}
     libzopfli
-    Threads::Threads)
+    ${PTHREAD_NAME}
+    ${EXTRA_LINKER_FLAGS})
 
 install(TARGETS magiskboot DESTINATION bin)

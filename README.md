@@ -55,6 +55,8 @@ sudo apk update
 sudo apk upgrade  # upgrade all existing packages (recommended)
 sudo apk add build-base xz-dev lz4-dev bzip2-dev dtc-dev zlib-dev \
         pkgconf clang lld cmake samurai libbsd-dev
+# for static builds also install these
+sudo apk add xz-static lz4-static bzip2-static zlib-static libbsd-static
 ````
 
 #### archlinux
@@ -67,6 +69,8 @@ sudo pacman -Su  # sync and upgrade all existing packages
 sudo pacman -S --needed base-dev xz lz4 bzip2 dtc zlib pkgconf clang lld cmake ninja libbsd
 ````
 
+static build is not supported on this distribution
+
 ### Build & Install
 
 ````shell
@@ -76,6 +80,8 @@ cmake --build build -j $(nproc)  # build
 # install to system (or to a directory specified by the `DESTDIR' environment variable)
 sudo cmake --install install
 ````
+
+to build a statically linked binary, pass `-DPREFER_STATIC_LINKING=ON` to `cmake` while configuring
 
 ### Generating source tarball
 
