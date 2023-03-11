@@ -1,4 +1,4 @@
-From ea359f8b1e2a7d06049aa86098b725a47fa0cd6d Mon Sep 17 00:00:00 2001
+From cd3bf665757d9bd6621dbf354992052b606d143c Mon Sep 17 00:00:00 2001
 From: Ookiineko <chiisaineko@protonmail.com>
 Date: Thu, 9 Mar 2023 23:40:14 +0800
 Subject: [PATCH] native: update Cargo config
@@ -7,11 +7,11 @@ Signed-off-by: Ookiineko <chiisaineko@protonmail.com>
 ---
  native/src/.cargo/config.toml | 4 ++--
  native/src/Cargo.lock         | 6 +++---
- native/src/Cargo.toml         | 6 +++---
+ native/src/Cargo.toml         | 2 +-
  native/src/base/Cargo.toml    | 2 +-
  native/src/core/Cargo.toml    | 2 +-
  native/src/init/Cargo.toml    | 2 +-
- 6 files changed, 11 insertions(+), 11 deletions(-)
+ 6 files changed, 9 insertions(+), 9 deletions(-)
 
 diff --git a/native/src/.cargo/config.toml b/native/src/.cargo/config.toml
 index 6f2e104..93a1723 100644
@@ -52,26 +52,10 @@ index 4da9ca5..7e7c6a9 100644
   "proc-macro2",
   "quote",
 diff --git a/native/src/Cargo.toml b/native/src/Cargo.toml
-index 82a2c6f..5081f5c 100644
+index 82a2c6f..10c448e 100644
 --- a/native/src/Cargo.toml
 +++ b/native/src/Cargo.toml
-@@ -3,18 +3,18 @@ exclude = ["external"]
- members = ["base", "boot", "core", "init", "sepolicy"]
- 
- [profile.dev]
--opt-level = "z"
-+opt-level = 3
- lto = true
- codegen-units = 1
- panic = "abort"
- strip = true
- 
- [profile.release]
--opt-level = "z"
-+opt-level = 3
- lto = true
- codegen-units = 1
- panic = "abort"
+@@ -17,4 +17,4 @@ panic = "abort"
  strip = true
  
  [patch.crates-io]
