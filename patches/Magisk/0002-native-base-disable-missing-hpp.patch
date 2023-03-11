@@ -1,29 +1,13 @@
 From e9b79ff55ce85478c37f5d71361f058cf384df6c Mon Sep 17 00:00:00 2001
 From: Ookiineko <chiisaineko@protonmail.com>
 Date: Thu, 9 Mar 2023 23:26:52 +0800
-Subject: [PATCH 2/5] native: base: disable Android compatibility stuffs on
- Linux
+Subject: [PATCH 2/5] native: base: disable missing.hpp
 
 Signed-off-by: Ookiineko <chiisaineko@protonmail.com>
 ---
- native/src/base/compat/compat.cpp | 2 ++
  native/src/base/include/base.hpp  | 2 ++
- 2 files changed, 4 insertions(+)
+ 1 files changed, 2 insertions(+)
 
-diff --git a/native/src/base/compat/compat.cpp b/native/src/base/compat/compat.cpp
-index f0f7efa..629abe2 100644
---- a/native/src/base/compat/compat.cpp
-+++ b/native/src/base/compat/compat.cpp
-@@ -148,7 +148,9 @@ int sigemptyset(sigset_t *set) {
- 
- #undef vsnprintf
- #undef snprintf
-+#ifdef __ANDROID__
- #include "fortify.hpp"
-+#endif
- 
- #endif
- 
 diff --git a/native/src/base/include/base.hpp b/native/src/base/include/base.hpp
 index a8481f3..e1b588e 100644
 --- a/native/src/base/include/base.hpp
@@ -31,7 +15,7 @@ index a8481f3..e1b588e 100644
 @@ -1,6 +1,8 @@
  #pragma once
  
-+#ifdef __ANDROID__
++#if 0
  #include "../missing.hpp"
 +#endif
  #include "../xwrap.hpp"
