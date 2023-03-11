@@ -96,6 +96,16 @@ sudo cmake --install install
 
 to build a statically linked binary, pass `-DPREFER_STATIC_LINKING=ON` to `cmake` while configuring
 
+#### Termux
+
+if static build aborts with an `executable's TLS segment is underaligned` error,
+
+fetch the [align_fix.py][align_fix] script and do this (`python` needs to be installed first):
+
+````shell
+python path/to/aligh_fix.py path/to/magiskboot
+````
+
 ### Generating source tarball
 
 ````shell
@@ -127,3 +137,4 @@ you should be able to find your source package under the `build` folder
 [android-tools]: https://github.com/nmeum/android-tools
 [libbsd]: https://libbsd.freedesktop.org/
 [rustup]: https://rustup.rs/
+[align_fix]: https://github.com/Lzhiyong/termux-ndk/blob/902f483485b42c73ffe354b725a4676f8b0c468a/patches/align_fix.py
