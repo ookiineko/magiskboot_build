@@ -16,6 +16,7 @@ if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/vendor/Magisk/native/src/Cargo.toml)
                           DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/generated/base-rs.hpp
                                   ${CMAKE_CURRENT_BINARY_DIR}/generated/base-rs.cpp)
         add_dependencies(libbase_binding prepare_generated_directory)
+        add_dependencies(libbase_binding cxxbridge)
     else()
         message(FATAL_ERROR "Cannot find native component \"base\"")
     endif()
