@@ -19,7 +19,7 @@ if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/vendor/Magisk/native/src/Cargo.toml)
     endif()
     if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/vendor/Magisk/native/src/boot/lib.rs)
         add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/libmagiskboot-rs.a
-                           COMMAND ${CMAKE_COMMAND} -E env RUSTFLAGS="-Clinker-plugin-lto" CARGO_TARGET_DIR="${CMAKE_CURRENT_BINARY_DIR}/libmagiskboot_target" ${CARGO_EXECUTABLE} build --target ${RUSTC_TARGET} -p magiskboot ${CARGO_FLAGS}
+                           COMMAND ${CMAKE_COMMAND} -E env RUSTFLAGS=-Clinker-plugin-lto\ -Cllvm-args=-opaque-pointers CARGO_TARGET_DIR="${CMAKE_CURRENT_BINARY_DIR}/libmagiskboot_target" ${CARGO_EXECUTABLE} build --target ${RUSTC_TARGET} -p magiskboot ${CARGO_FLAGS}
                            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_BINARY_DIR}/libmagiskboot_target/${RUSTC_TARGET}/${CARGO_OUT}/libmagiskboot.a ${CMAKE_CURRENT_BINARY_DIR}/libmagiskboot-rs.a
                            COMMENT "Building Rust static library libmagiskboot-rs.a"
                            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/vendor/Magisk/native/src)
