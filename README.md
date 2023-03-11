@@ -76,7 +76,8 @@ apt install tur-repo  # for nightly Rust package
 apt install build-essentials liblzma liblz4 libbz2 dtc zlib pkg-config \
             clang lld rustc-nightly cmake ninja libbsd
 # for static builds also install these
-apt install ndk-multilib liblzma-static dtc-static zlib-static libbsd-static libmd-static
+apt install ndk-multilib liblzma-static dtc-static zlib-static \
+            libbsd-static libmd-static termux-elf-cleaner
 ````
 
 ### Build & Install
@@ -95,10 +96,11 @@ to build a statically linked binary, pass `-DPREFER_STATIC_LINKING=ON` to `cmake
 
 if static build aborts with an `executable's TLS segment is underaligned` error,
 
-fetch the [align_fix.py][align_fix] script and do this (`python` needs to be installed first):
+try again after running `termux-elf-cleaner` on it:
 
 ````shell
-python path/to/aligh_fix.py path/to/magiskboot
+termux-elf-cleaner build/magiskboot  # fix the alignment
+./build/magiskboot
 ````
 
 ### Generating source tarball
@@ -131,4 +133,3 @@ you should be able to find your source package under the `build` folder
 [android-tools]: https://github.com/nmeum/android-tools
 [libbsd]: https://libbsd.freedesktop.org/
 [rustup]: https://rustup.rs/
-[align_fix]: https://github.com/Lzhiyong/termux-ndk/blob/902f483485b42c73ffe354b725a4676f8b0c468a/patches/align_fix.py
