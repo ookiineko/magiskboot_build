@@ -1,3 +1,5 @@
+# mostly copied from Magisk's build.py
+
 if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/vendor/Magisk/native/src/Cargo.toml)
     if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/vendor/Magisk/native/src/base/lib.rs)
         add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/generated/base-rs.hpp

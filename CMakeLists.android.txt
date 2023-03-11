@@ -1,3 +1,5 @@
+# the followings are copied from android-tools
+
 add_subdirectory(vendor/android_fmtlib EXCLUDE_FROM_ALL)
 
 add_library(android_liblog STATIC

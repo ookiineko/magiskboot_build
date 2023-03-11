@@ -1,3 +1,5 @@
+# the followings are copied from Magisk
+
 add_library(libbase STATIC
     vendor/Magisk/native/src/base/files.cpp
     vendor/Magisk/native/src/base/misc.cpp
