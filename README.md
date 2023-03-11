@@ -80,6 +80,8 @@ apt install tur-repo  # for nightly Rust package
 apt install build-essentials liblzma liblz4 libbz2 dtc zlib pkg-config \
             clang lld rustc-nightly cmake ninja libbsd
 cargo install --version 1.0.92 cxxbridge-cmd
+# for static builds also install these
+apt install ndk-multilib liblzma-static dtc-static zlib-static libbsd-static libmd-static
 ````
 
 ### Build & Install
