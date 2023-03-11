@@ -1,4 +1,4 @@
-From c1024e522be5ddf292d19ec6d474e3a35d95cee6 Mon Sep 17 00:00:00 2001
+From ea359f8b1e2a7d06049aa86098b725a47fa0cd6d Mon Sep 17 00:00:00 2001
 From: Ookiineko <chiisaineko@protonmail.com>
 Date: Thu, 9 Mar 2023 23:40:14 +0800
 Subject: [PATCH] native: update Cargo config
@@ -52,7 +52,7 @@ index 4da9ca5..7e7c6a9 100644
   "proc-macro2",
   "quote",
 diff --git a/native/src/Cargo.toml b/native/src/Cargo.toml
-index 82a2c6f..ed654dd 100644
+index 82a2c6f..5081f5c 100644
 --- a/native/src/Cargo.toml
 +++ b/native/src/Cargo.toml
 @@ -3,18 +3,18 @@ exclude = ["external"]
@@ -60,7 +60,7 @@ index 82a2c6f..ed654dd 100644
  
  [profile.dev]
 -opt-level = "z"
-+opt-level = 2
++opt-level = 3
  lto = true
  codegen-units = 1
  panic = "abort"
@@ -68,7 +68,7 @@ index 82a2c6f..ed654dd 100644
  
  [profile.release]
 -opt-level = "z"
-+opt-level = 2
++opt-level = 3
  lto = true
  codegen-units = 1
  panic = "abort"

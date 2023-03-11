@@ -6,6 +6,7 @@ add_library(libbase STATIC
     vendor/Magisk/native/src/base/selinux.cpp
     vendor/Magisk/native/src/base/logging.cpp
     vendor/Magisk/native/src/base/stream.cpp
+    vendor/Magisk/native/src/base/new.cpp
     vendor/cxx-rs/src/cxx.cc)
 target_include_directories(libbase PRIVATE
     vendor/Magisk/native/src/base)
