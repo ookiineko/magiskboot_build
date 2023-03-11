@@ -44,7 +44,7 @@ message(STATUS "Found cargo: ${CARGO_EXECUTABLE}, version ${CARGO_VERSION}")
 if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/vendor/cxx-rs/gen/cmd/Cargo.toml)
     set(CXXBRIDGE_EXECUTABLE "${CMAKE_CURRENT_BINARY_DIR}/build-tools/bin/cxxbridge")
     add_custom_command(OUTPUT ${CXXBRIDGE_EXECUTABLE}
-                       COMMAND ${CARGO_EXECUTABLE} install --root ${CMAKE_CURRENT_BINARY_DIR}/build-tools --path ${CMAKE_CURRENT_SOURCE_DIR}/vendor/cxx-rs/gen/cmd
+                       COMMAND ${CARGO_EXECUTABLE} install --root ${CMAKE_CURRENT_BINARY_DIR}/build-tools --path ${CMAKE_CURRENT_SOURCE_DIR}/vendor/cxx-rs/gen/cmd -q
                        COMMENT "Building Rust command-line tool cxxbridge")
     add_custom_target(cxxbridge
                       DEPENDS ${CXXBRIDGE_EXECUTABLE})
