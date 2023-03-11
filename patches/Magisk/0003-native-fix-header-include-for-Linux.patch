@@ -55,7 +55,7 @@ index ac0a3dc..bc0885f 100644
  
  #include <base-rs.hpp>
  
-+#ifndef __BIONIC__
++#ifndef __ANDROID__
 +#include <bsd/sys/cdefs.h>
 +#endif
 +
@@ -71,7 +71,7 @@ index 0dc6189..cab2e25 100644
  #include <random>
  #include <string>
 +#include <cstring>
-+#ifndef __BIONIC__
++#ifndef __ANDROID__
 +#include <bsd/string.h>
 +#endif
  
@@ -97,7 +97,7 @@ index dcf3cb0..45872fc 100644
  #include <unistd.h>
  #include <sys/syscall.h>
  #include <sys/xattr.h>
-+#ifndef __BIONIC__
++#ifndef __ANDROID__
 +#include <linux/xattr.h>
 +#endif
 +#include <cstring>
@@ -112,7 +112,7 @@ index dcde87e..1bc7837 100644
  #include <unistd.h>
  #include <cstddef>
 +#include <cstring>
-+#ifndef __BIONIC__
++#ifndef __ANDROID__
 +#include <bsd/stdio.h>
 +#endif
  
