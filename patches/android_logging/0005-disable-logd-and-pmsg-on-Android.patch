@@ -1,0 +1,27 @@
+From 0d126f64100e275c737e4da3d5d6c15b61740ee8 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?=3D=3FUTF-8=3Fq=3F=3DE9=3D9F=3DA9=3DE6=3D9C=3DB4=3DE5=3DAE?=
+ =?UTF-8?q?=3D87=3F=3D?= <w12101111@gmail.com>
+Date: Thu, 8 Apr 2021 00:51:30 +0800
+Subject: [PATCH] disable logd and pmsg on Android
+
+Signed-off-by: Ookiineko <chiisaineko@protonmail.com>
+---
+ liblog/logger_write.cpp | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/liblog/logger_write.cpp b/liblog/logger_write.cpp
+index 596b1af..7057a60 100644
+--- a/liblog/logger_write.cpp
++++ b/liblog/logger_write.cpp
+@@ -39,6 +39,8 @@
+ #include "logger.h"
+ #include "uio.h"
+ 
++#undef __ANDROID__
++
+ #ifdef __ANDROID__
+ #include "logd_writer.h"
+ #include "pmsg_writer.h"
+-- 
+2.39.2
+

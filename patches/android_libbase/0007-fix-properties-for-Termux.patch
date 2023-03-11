@@ -1,0 +1,69 @@
+From aa360f6b6062589e0e9946e54cea3a10f0adfdb0 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?=3D=3FUTF-8=3Fq=3F=3DE9=3D9F=3DA9=3DE6=3D9C=3DB4=3DE5=3DAE?=
+ =?UTF-8?q?=3D87=3F=3D?= <w12101111@gmail.com>
+Date: Fri, 29 Oct 2021 14:52:25 +0800
+Subject: [PATCH] fix properties for Termux
+
+Co-authored-by: Ian Hu <hu2008yinxiang@163.com>
+
+Signed-off-by: Ookiineko <chiisaineko@protonmail.com>
+---
+ properties.cpp | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
+
+diff --git a/properties.cpp b/properties.cpp
+index 8190987..6d48ab8 100644
+--- a/properties.cpp
++++ b/properties.cpp
+@@ -16,7 +16,7 @@
+ 
+ #include "android-base/properties.h"
+ 
+-#if defined(__BIONIC__)
++#if 0
+ #define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
+ #include <sys/system_properties.h>
+ #include <sys/_system_properties.h>
+@@ -32,11 +32,9 @@
+ #include <android-base/parseint.h>
+ #include <android-base/strings.h>
+ 
+-#if !defined(__BIONIC__)
+-
+ #define PROP_VALUE_MAX 92
+ 
+-static std::map<std::string, std::string>& g_properties = *new std::map<std::string, std::string>;
++static std::map<std::string, std::string> g_properties;
+ 
+ int __system_property_set(const char* key, const char* value) {
+   if (key == nullptr || *key == '\0') return -1;
+@@ -63,8 +61,6 @@ int __system_property_get(const char* key, char* value) {
+   return strlen(value);
+ }
+ 
+-#endif
+-
+ namespace android {
+ namespace base {
+ 
+@@ -108,7 +104,7 @@ template uint64_t GetUintProperty(const std::string&, uint64_t, uint64_t);
+ 
+ std::string GetProperty(const std::string& key, const std::string& default_value) {
+   std::string property_value;
+-#if defined(__BIONIC__)
++#if 0
+   const prop_info* pi = __system_property_find(key.c_str());
+   if (pi == nullptr) return default_value;
+ 
+@@ -134,7 +130,7 @@ bool SetProperty(const std::string& key, const std::string& value) {
+   return (__system_property_set(key.c_str(), value.c_str()) == 0);
+ }
+ 
+-#if defined(__BIONIC__)
++#if 0
+ 
+ struct WaitForPropertyData {
+   bool done;
+-- 
+2.39.2
+

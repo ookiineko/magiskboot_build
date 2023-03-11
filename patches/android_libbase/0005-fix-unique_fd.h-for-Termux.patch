@@ -1,0 +1,36 @@
+From dc8972eff142d2455420ac01ff6bd069f1a8f8d6 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?=3D=3FUTF-8=3Fq=3F=3DE9=3D9F=3DA9=3DE6=3D9C=3DB4=3DE5=3DAE?=
+ =?UTF-8?q?=3D87=3F=3D?= <w12101111@gmail.com>
+Date: Thu, 8 Apr 2021 00:51:30 +0800
+Subject: [PATCH] fix unique_fd.h for Termux
+
+Signed-off-by: Ookiineko <chiisaineko@protonmail.com>
+---
+ include/android-base/unique_fd.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/include/android-base/unique_fd.h b/include/android-base/unique_fd.h
+index 1ffe02f..d7a8376 100644
+--- a/include/android-base/unique_fd.h
++++ b/include/android-base/unique_fd.h
+@@ -29,7 +29,7 @@
+ // Including other headers from libbase frequently results in inclusion of
+ // android-base/macros.h, which causes macro collisions.
+ 
+-#if defined(__BIONIC__)
++#if 0
+ #include <android/fdsan.h>
+ #endif
+ #if !defined(_WIN32) && !defined(__TRUSTY__)
+@@ -151,7 +151,7 @@ class unique_fd_impl final {
+ // The actual details of closing are factored out to support unusual cases.
+ // Almost everyone will want this DefaultCloser, which handles fdsan on bionic.
+ struct DefaultCloser {
+-#if defined(__BIONIC__)
++#if 0
+   static void Tag(int fd, void* old_addr, void* new_addr) {
+     if (android_fdsan_exchange_owner_tag) {
+       uint64_t old_tag = android_fdsan_create_owner_tag(ANDROID_FDSAN_OWNER_TYPE_UNIQUE_FD,
+-- 
+2.39.2
+
