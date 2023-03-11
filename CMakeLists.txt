@@ -37,20 +37,20 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 find_package(PkgConfig REQUIRED)
 find_package(LibLZMA REQUIRED)
-find_package(BZip2 REQUIRED)
 pkg_check_modules(zlib REQUIRED IMPORTED_TARGET zlib)
 pkg_check_modules(libbsd REQUIRED IMPORTED_TARGET libbsd)
 
 if (PREFER_STATIC_LINKING)
     set(LIBLZMA_NAME lzma)
     set(LIBLZ4_NAME liblz4)
-    set(LIBBZ2_NAME bz2)
+    set(LIBBZ2_NAME libbz2)
     set(LIBFDT_NAME libfdt)
     set(LIBZ_NAME z)
     set(LIBBSD_NAME bsd md)
     set(PTHREAD_NAME pthread)
     set(EXTRA_LINKER_FLAGS -static)
 else()
+    find_package(BZip2 REQUIRED)
     pkg_check_modules(liblz4 REQUIRED IMPORTED_TARGET liblz4)
     find_package(LIBFDT REQUIRED)
 
@@ -75,11 +75,10 @@ include(CMakeLists.patch.txt)
 # patched versions of the vendored dependencies.
 set(CPACK_SOURCE_GENERATOR "TXZ")
 set(CPACK_SOURCE_PACKAGE_FILE_NAME "magiskboot_${MAGISK_VERSION}_${MAGISK_VER_CODE}-src")
-set(CPACK_SOURCE_IGNORE_FILES "/patches/" "/build/" "/.git/"
-    "/vendor/Magisk/app/" "/vendor/Magisk/buildSrc/" "/vendor/Magisk/docs/"
-    "/vendor/Magisk/gradle/" "/vendor/Magisk/scripts/" "/vendor/Magisk/stub/"
-    "/vendor/Magisk/tools/" "/vendor/Magisk/native/src/external/busybox/"
-    "/vendor/Magisk/native/src/external/bzip2/" "/vendor/Magisk/native/src/external/cxx-rs/"
+set(CPACK_SOURCE_IGNORE_FILES "/patches/" "/build/" "/.git/" "/vendor/Magisk/app/"
+    "/vendor/Magisk/buildSrc/" "/vendor/Magisk/docs/" "/vendor/Magisk/gradle/"
+    "/vendor/Magisk/scripts/" "/vendor/Magisk/stub/" "/vendor/Magisk/tools/"
+    "/vendor/Magisk/native/src/external/busybox/" "/vendor/Magisk/native/src/external/cxx-rs/"
     "/vendor/Magisk/native/src/external/libcxx/" "/vendor/Magisk/native/src/external/lsplt/"
     "/vendor/Magisk/native/src/external/nanopb/" "/vendor/Magisk/native/src/external/parallel-hashmap/"
     "/vendor/Magisk/native/src/external/pcre/" "/vendor/Magisk/native/src/external/selinux/"

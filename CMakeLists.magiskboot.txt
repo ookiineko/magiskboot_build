@@ -63,6 +63,17 @@ if (PREFER_STATIC_LINKING)
         vendor/Magisk/native/src/external/lz4/lib/xxhash.c)
     target_include_directories(liblz4 PUBLIC
         vendor/Magisk/native/src/external/lz4/lib)
+
+    add_library(libbz2 STATIC
+        vendor/Magisk/native/src/external/bzip2/blocksort.c
+        vendor/Magisk/native/src/external/bzip2/huffman.c
+        vendor/Magisk/native/src/external/bzip2/crctable.c
+        vendor/Magisk/native/src/external/bzip2/randtable.c
+        vendor/Magisk/native/src/external/bzip2/compress.c
+        vendor/Magisk/native/src/external/bzip2/decompress.c
+        vendor/Magisk/native/src/external/bzip2/bzlib.c)
+    target_include_directories(libbz2 PUBLIC
+        vendor/Magisk/native/src/external/bzip2)
 endif()
 
 add_executable(magiskboot
@@ -76,10 +87,10 @@ add_executable(magiskboot
     vendor/Magisk/native/src/boot/pattern.cpp
     vendor/Magisk/native/src/boot/cpio.cpp)
 target_include_directories(magiskboot PRIVATE
-    ${LIBLZMA_INCLUDE_DIRS}
-    ${BZIP2_INCLUDE_DIRS})
+    ${LIBLZMA_INCLUDE_DIRS})
 if (NOT PREFER_STATIC_LINKING)
 target_include_directories(magiskboot PRIVATE
+    ${BZIP2_INCLUDE_DIRS}
     ${LIBFDT_INCLUDE_DIRS})
 endif()
 target_link_libraries(magiskboot
