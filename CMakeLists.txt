@@ -32,6 +32,8 @@ option(PATCH_VENDOR_PROJECTS "Patch vendor projects using patches directory" ON)
 # This requires installing depended static libraries on the host.
 option(PREFER_STATIC_LINKING "Prefer static libraries when linking" OFF)
 
+add_compile_definitions(_FORTIFY_SOURCE=2)
+
 include(CMakeLists.android.txt)
 include(CMakeLists.magisk.txt)
 

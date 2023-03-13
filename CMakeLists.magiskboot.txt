@@ -13,7 +13,6 @@ target_include_directories(libbase PRIVATE
 target_include_directories(libbase PUBLIC
     vendor/Magisk/native/src/include
     vendor/Magisk/native/src/base/include)
-target_compile_options(libbase PRIVATE -include ${CMAKE_CURRENT_SOURCE_DIR}/fortify.h)
 target_link_libraries(libbase ${LIBBSD_NAME} android_liblog ${EXTRA_LINKER_FLAGS})
 
 add_library(libmincrypt STATIC
