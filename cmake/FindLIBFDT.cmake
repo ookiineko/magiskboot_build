@@ -2,9 +2,9 @@
 # Try to find libfdt
 # Once done this will define
 #
-#  LZ4_FOUND - system has libfdt
-#  LZ4_INCLUDE_DIRS - the libfdt include directory
-#  LZ4_LIBRARIES - Link these to use libfdt
+#  LIBFDT_FOUND - system has libfdt
+#  LIBFDT_INCLUDE_DIRS - the libfdt include directory
+#  LIBFDT_LIBRARIES - Link these to use libfdt
 #
 
 find_path(LIBFDT_INCLUDE_DIR
