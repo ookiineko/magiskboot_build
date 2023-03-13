@@ -1,4 +1,4 @@
-From 7d66f82dc0771a3a1869b50f77b93d02ebb7c2ed Mon Sep 17 00:00:00 2001
+From b5593c469396e619d3ca14e0e170c3bd24152040 Mon Sep 17 00:00:00 2001
 From: Ookiineko <chiisaineko@protonmail.com>
 Date: Thu, 9 Mar 2023 23:29:40 +0800
 Subject: [PATCH] native: fix header include for Linux
@@ -10,14 +10,14 @@ Signed-off-by: Ookiineko <chiisaineko@protonmail.com>
  native/src/base/logging.hpp  | 4 ++++
  native/src/base/misc.cpp     | 4 ++++
  native/src/base/misc.hpp     | 1 +
- native/src/base/selinux.cpp  | 4 ++++
+ native/src/base/selinux.cpp  | 2 ++
  native/src/base/stream.cpp   | 4 ++++
  native/src/base/xwrap.hpp    | 2 ++
  native/src/boot/cpio.cpp     | 1 +
  native/src/boot/format.hpp   | 1 +
  native/src/boot/hexpatch.cpp | 1 +
  native/src/boot/pattern.cpp  | 2 ++
- 12 files changed, 27 insertions(+)
+ 12 files changed, 25 insertions(+)
 
 diff --git a/native/src/base/files.cpp b/native/src/base/files.cpp
 index 4012d2e..1d30556 100644
@@ -48,14 +48,14 @@ index ea27cfd..ce1b964 100644
  #include "xwrap.hpp"
  
 diff --git a/native/src/base/logging.hpp b/native/src/base/logging.hpp
-index ac0a3dc..bc0885f 100644
+index ac0a3dc..f92c6ff 100644
 --- a/native/src/base/logging.hpp
 +++ b/native/src/base/logging.hpp
 @@ -5,6 +5,10 @@
  
  #include <base-rs.hpp>
  
-+#ifndef __ANDROID__
++#if !defined(__ANDROID__) && !defined(__FreeBSD__) && !defined(__OpenBSD__) && !defined(__NetBSD__) && !defined(__DragonFly__)
 +#include <bsd/sys/cdefs.h>
 +#endif
 +
@@ -63,7 +63,7 @@ index ac0a3dc..bc0885f 100644
  
  void LOGD(const char *fmt, ...) __printflike(1, 2);
 diff --git a/native/src/base/misc.cpp b/native/src/base/misc.cpp
-index 0dc6189..cab2e25 100644
+index 0dc6189..094581e 100644
 --- a/native/src/base/misc.cpp
 +++ b/native/src/base/misc.cpp
 @@ -8,6 +8,10 @@
@@ -71,7 +71,7 @@ index 0dc6189..cab2e25 100644
  #include <random>
  #include <string>
 +#include <cstring>
-+#ifndef __ANDROID__
++#if !defined(__ANDROID__) && !defined(__FreeBSD__) && !defined(__OpenBSD__) && !defined(__NetBSD__) && !defined(__DragonFly__)
 +#include <bsd/string.h>
 +#endif
  
@@ -90,29 +90,27 @@ index c193a2c..48e6082 100644
  #include <base-rs.hpp>
  
 diff --git a/native/src/base/selinux.cpp b/native/src/base/selinux.cpp
-index dcf3cb0..45872fc 100644
+index dcf3cb0..7217c6c 100644
 --- a/native/src/base/selinux.cpp
 +++ b/native/src/base/selinux.cpp
-@@ -1,6 +1,10 @@
+@@ -1,6 +1,8 @@
  #include <unistd.h>
  #include <sys/syscall.h>
  #include <sys/xattr.h>
-+#ifndef __ANDROID__
 +#include <linux/xattr.h>
-+#endif
 +#include <cstring>
  
  #include <base.hpp>
  #include <selinux.hpp>
 diff --git a/native/src/base/stream.cpp b/native/src/base/stream.cpp
-index dcde87e..1bc7837 100644
+index dcde87e..f8f3bb4 100644
 --- a/native/src/base/stream.cpp
 +++ b/native/src/base/stream.cpp
 @@ -1,5 +1,9 @@
  #include <unistd.h>
  #include <cstddef>
 +#include <cstring>
-+#ifndef __ANDROID__
++#if !defined(__ANDROID__) && !defined(__FreeBSD__) && !defined(__OpenBSD__) && !defined(__NetBSD__) && !defined(__DragonFly__)
 +#include <bsd/stdio.h>
 +#endif
  
