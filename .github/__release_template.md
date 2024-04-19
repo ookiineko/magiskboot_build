@@ -24,8 +24,4 @@ For debug builds, please download from [here](../../releases/last-debug-ci) inst
 
 OS release number is minimal required version to run the binary, binaries from the previous OS release(s) should work.
 
-#### About Web builds
-
-- `noderawfs`: using NodeJS's host filesystem API (requires NodeJS to run, see the *WebAssembly*->*Emscripten* section in [README.md](README.md#emscripten) for more details), build with this tag is intended for running on desktop OS that is not yet supported by magiskboot_build
-
 [Magisk]: https://github.com/topjohnwu/Magisk/releases

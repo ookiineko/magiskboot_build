@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="magiskboot_build Web instance"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+    <title>magiskboot.wasm</title>
+
+    <!-- dummy favicon -->
+    <link rel="icon" href="data:;base64,iVBORw0KGgo="/>
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"/>
+    <style>
+      html {
+        /* prevent pull-down refresh */
+        overscroll-behavior: none;
+      }
+      body {
+        /* fit to full screen */
+        margin: 0;
+        /* fallback */
+        position: fixed;
+        height: 100%;
+        height: 100dvh;  /* require new browsers */
+      }
+      @supports(-webkit-touch-callout: none) {
+        /* safari only */
+        body {
+          height: -webkit-fill-available;
+        }
+      }
+      .mbb_scr {
+        display: none;
+      }
+      body, fieldset, .mbb_hlayout, .mbb_scr:target {
+        display: flex;
+      }
+      body, .mbb_scr:target {
+        flex-direction: column;
+      }
+      div, body {
+        /* quirk to make table scrollable:
+         *   https://stackoverflow.com/a/35609992
+         */
+        overflow: hidden;
+      }
+      textarea, td, .mbb_mono {
+        font-family: monospace;
+      }
+      textarea, .mbb_flex, .mbb_scr {
+        /* auto fit */
+        flex: 1;
+      }
+      fieldset, .mbb_hlayout {
+        flex-direction: row;
+      }
+      .mbb_hsep {
+        width: 0.5rem;
+      }
+      .mbb_pager {
+        overflow: auto;
+      }
+      .mbb_highlight {
+        font-weight: bold;
+        font-style: italic;
+        font-size: 1.1em;
+        filter: invert(80%);
+      }
+    </style>
+  </head>
+  <body>
+    <fieldset id="scr_sel" disabled>
+      <!-- Screen Switcher -->
+
+      <label class="mbb_flex">
+        <input type="radio" name="mbb_scr" checked
+               onclick="window.location.href = '#scr_tty'"
+               autocomplete="off"/>
+        TTY
+      </label>
+
+      <label class="mbb_flex">
+        <input type="radio" name="mbb_scr"
+               onclick="window.location.href = '#scr_vfs'"
+               autocomplete="off"/>
+        VFS
+      </label>
+
+      <label class="mbb_flex">
+        <input type="radio" name="mbb_scr"
+               onclick="window.location.href = '#scr_env'"
+               autocomplete="off"/>
+        Environ
+      </label>
+    </fieldset>
+    <hr/>
+
+    <div id="scr_tty" class="mbb_scr">
+      <!-- TTY screen -->
+
+      <label id="status_label">Note:&nbsp;
+        <span id="status_show">May stuck when lack support for WebAssembly</span>
+      </label>
+
+      <input id="cmdline_edit"
+             placeholder="foo &quot;bar&quot; 'baz' &quot;foo bar&quot; 'foo bar' …"
+             autocomplete="off" readonly class="mbb_mono"/>
+
+      <textarea id="conout" readonly autocomplete="off"></textarea>
+    </div>
+
+    <div id="scr_vfs" class="mbb_scr">
+      <!-- VFS screen -->
+
+      <label>CWD:&nbsp;
+        <span id="cwd_show" class="mbb_mono">?</span>
+      </label>
+
+      <div class="mbb_hlayout">
+        <div class="mbb_hsep"></div>
+        <button id="mkdir_btn">New Folder</button>
+        <div class="mbb_hsep"></div>
+        <button id="imp_btn">Import File</button>
+      </div>
+      <hr/>
+
+      <fieldset id="fileop_panel" class="mbb_hlayout" disabled>
+        <div class="mbb_hsep"></div>
+        <button id="rm_btn">Remove</button>
+        <div class="mbb_hsep"></div>
+        <button id="rename_btn">Rename to</button>
+        <div class="mbb_hsep"></div>
+        <button id="cp_btn" disabled>Copy file to</button>
+      </fieldset>
+
+      <span><sub>⚬ Tap to select, tap again on the highlighted entry to navigate / export file</sub></span>
+      <hr/>
+
+      <div class="mbb_flex mbb_pager">
+        <table id="dirent_tab">
+        </table>
+      </div>
+    </div>
+
+    <div id="scr_env" class="mbb_scr">
+      <!-- Environ screen -->
+
+      <div class="mbb_hlayout">
+        <div class="mbb_hsep"></div>
+        <button id="apply_env_btn" style="flex: 7">Save &amp; Restart</button>
+        <div class="mbb_hsep"></div>
+        <button id="clear_env_btn" class="mbb_flex">Clear</button>
+        <div class="mbb_hsep"></div>
+      </div>
+      <hr/>
+
+      <textarea id="env_edit"
+                placeholder="FOO&#10;FOO=&#10;FOO=bar&#10;BAZ=foo bar&#10;…"
+                autocomplete="off"></textarea>
+    </div>
+
+    <!-- placeholder for emscripten generated script -->
+    {{{ SCRIPT }}}
+  </body>
+</html>

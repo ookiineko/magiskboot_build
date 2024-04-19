@@ -178,33 +178,27 @@ On arch-cygwin, set `CYGWIN_CC` and `CYGWIN_CXX` to `x86_64-pc-cygwin-clang` and
 
 </details>
 
-<details><summary>WebAssembly</summary>
+<details><summary>Web</summary>
 
 #### Emscripten
 
-> **Note**
->
-> Currently this port only support running with NodeJS.
->
-> A web frontend wrapper must be written to handle the argument passing and file system management in browsers.
->
-> This should be implemented soon in the future ([#19](../../issues/19)), but unfortunately I am not a web developer, any help on this will be welcome QwQ
-
 Please read the [Cross compiling](#cross-compiling) instructions first.
 
-Install the [Emscripten][Emscripten] SDK and also a Rust compiler with Emscripten target (probably via [rustup][rustup]).
+Install the [Emscripten SDK][emsdk] and also a Rust compiler with Emscripten target (probably via [rustup][rustup]).
 
 > **Warning**
 >
-> emsdk version 3.1.37 is recommended, you might run into weird problems with other versions.
+> An emsdk with version between 3.1.31 and 3.1.34 is required, this project is known to not build or work correctly with other SDK versions.
 
 Use [vcpkg][vcpkg] to install the [depended libraries](#requirements), the triplet is called `wasm32-emscripten`.
 
-When configuring, use `emcmake cmake` instead of `cmake` (but don't use it for `cmake --build` and other CMake commands) , and use `/path/to/your/emsdk/emscripten/cmake/Modules/Platform/Emscripten.cmake` as the toolchain file for vcpkg.
+When configuring, use `emcmake cmake` instead of `cmake` (but don't use it for `cmake --build` and other CMake commands) , and use `/path/to/your/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake` as the toolchain file for vcpkg.
 
-For NodeJS, make sure to set `CMAKE_EXE_LINKER_FLAGS` to `-sNODERAWFS` to allow using the host filesystem.
+To target web browsers, set `-sENVIRONMENT=web` in `CMAKE_EXE_LINKER_FLAGS` (recommended step, for reducing JS size). If you want real-time console output, set `-sASYNCIFY` as well (Note this will increase the binary size significantly).
 
-finally, you can run the result with [NodeJS][NodeJS] using: `node magiskboot.js`
+For NodeJS, set `-sENVIRONMENT=node` instead. **Make sure** to also set `-sEXIT_RUNTIME=1` and  `-sNODERAWFS`. And then you will be able to run the end result with [NodeJS][NodeJS] like this: `node magiskboot.js`
+
+You can find more details about these linker flags in [Emscripten documentation](https://emscripten.org/docs/tools_reference/settings_reference.html).
 
 </details>
 
@@ -409,6 +403,6 @@ For more details about these licenses, please see [LICENSE](LICENSE) and [LICENS
 [fedora-cygwin]: https://copr.fedorainfracloud.org/coprs/yselkowitz/cygwin/
 [cmake-toolchains]: https://cmake.org/cmake/help/latest/manual/cmake-toolchains.7.html
 [vcpkg]: https://vcpkg.io/
-[Emscripten]: https://github.com/emscripten-core/emsdk
+[emsdk]: https://github.com/emscripten-core/emsdk
 [NodeJS]: https://nodejs.org/
 [ONDK]: https://github.com/topjohnwu/ondk

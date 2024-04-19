@@ -14,6 +14,7 @@ on:
       - main
     paths-ignore:
       - '.github/workflows/release.yaml'
+      - '.github/workflows/deploy.yaml'
       - '.github/ISSUE_TEMPLATE/**'
       - 'patches-contrib/**'
       - 'LICENSE'
@@ -23,6 +24,7 @@ on:
   pull_request:
     paths-ignore:
       - '.github/workflows/release.yaml'
+      - '.github/workflows/deploy.yaml'
       - '.github/__release_template.txt'
       - 'patches-contrib/**'
       - 'LICENSE'
@@ -780,12 +782,24 @@ jobs:
     permissions:
       actions: write
     needs: [vars]
+    strategy:
+      matrix:
+        include:
+          - upload_prefix: "node"
+            ldflags: "-sENVIRONMENT=node -sEXIT_RUNTIME=1 -sNODERAWFS"
+            check: YES
+
+          - upload_prefix: "web"
+            ldflags: "-sENVIRONMENT=web -sASYNCIFY"
+            keep_shell_file: YES
+            opt_size: YES
+
     env:
       vcpkg_triplet: "wasm32-emscripten"
-      emsdk_ver: 3.1.37
+      emsdk_ver: 3.1.34
       emsdk_cache_dir: "emsdk-cache"
       rust_target: "wasm32-unknown-emscripten"
-      upload_suffix: "emscripten-wasm32-noderawfs-static"
+      upload_suffix: "emscripten-wasm32-static"
 
     steps:
       - name: Prepare (Host)
@@ -802,7 +816,7 @@ jobs:
           key: emsdk-${{ env.emsdk_ver }}-${{ runner.os }}
 
       - name: Prepare (Emscripten)
-        uses: mymindstorm/setup-emsdk@v13
+        uses: mymindstorm/setup-emsdk@v14
         with:
           version: ${{ env.emsdk_ver }}
           actions-cache-folder: ${{ env.emsdk_cache_dir }}
@@ -848,7 +862,7 @@ jobs:
 
           echo -e "\n### configure ###\n"
           . "$HOME/.cargo/env"
-          emcmake cmake -G Ninja -B build -DCMAKE_EXE_LINKER_FLAGS=" ${{ needs.vars.outputs.lto_ldflags }} -sNODERAWFS" \
+          emcmake cmake -G Ninja -B build -DCMAKE_EXE_LINKER_FLAGS=" ${{ needs.vars.outputs.lto_ldflags }} ${{ matrix.ldflags }}" \
               -DRust_CARGO_TARGET=${{ env.rust_target }} -DFULL_RUST_LTO=${{ needs.vars.outputs.full_lto }} \
               -DCMAKE_BUILD_TYPE=${{ needs.vars.outputs.cmake_build_type }} -DPREFER_STATIC_LINKING=ON \
               -DCMAKE_TOOLCHAIN_FILE=$VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake \
@@ -859,8 +873,17 @@ jobs:
           cmake --build build -j $(nproc) -v
           emstrip build/magiskboot*.wasm
 
+          if [[ "${{ matrix.keep_shell_file }}" != 'YES' ]]; then
+            rm -f build/magiskboot*.html
+          fi
+
           file build/magiskboot*
-          $EMSDK_NODE ./build/magiskboot*.js || true
+          du -h build/magiskboot*
+
+          if [[ "${{ matrix.check }}" == "YES" ]]; then
+            $EMSDK_NODE ./build/magiskboot*.js || true
+          fi
+
           rm -rf $GITHUB_WORKSPACE/${{ env.progname }}-out && mkdir -p $GITHUB_WORKSPACE/${{ env.progname }}-out
           cp -afv build/magiskboot* $GITHUB_WORKSPACE/${{ env.progname }}-out
 
@@ -868,10 +891,11 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           if-no-files-found: error
-          name: ${{ env.progname }}-${{ needs.vars.outputs.short_sha }}-${{ needs.vars.outputs.build_type }}-${{ env.upload_suffix }}
+          name: ${{ env.progname }}-${{ needs.vars.outputs.short_sha }}-${{ needs.vars.outputs.build_type }}-${{ matrix.upload_prefix }}-${{ env.upload_suffix }}
           path: ${{ github.workspace }}/${{ env.progname }}-out/magiskboot*
 
       - name: Check
+        if: matrix.check == 'YES'
         run: |
           cd magiskboot_*-src/
           EMULATOR=$EMSDK_NODE ./scripts/magiskboot_test.sh $GITHUB_WORKSPACE/${{ env.progname }}-out/magiskboot*.js

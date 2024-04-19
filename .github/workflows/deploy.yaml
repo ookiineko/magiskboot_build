@@ -1,0 +1,41 @@
+name: Deploy
+on:
+  workflow_dispatch:
+    inputs:
+      ci_run_id:
+        description: "Run ID of the desired CI run to download artifacts from"
+        required: true
+
+env:
+  projname: "magiskboot-build-wasm"
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifacts
+        id: download-artifact
+        uses: dawidd6/action-download-artifact@v3
+        with:
+          workflow: ci.yaml
+          workflow_conclusion: success
+          run_id: ${{ github.event.inputs.ci_run_id }}
+          path: artifacts
+          skip_unpack: true
+
+      - name: Extract artifacts
+        run: |
+          unzip -j -d dists artifacts/magiskboot-*-*-web-emscripten-wasm32-static.zip 'magiskboot*.*'
+
+      - name: Rename files
+        run: |
+          cd dists
+          mv magiskboot*.html index.html
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dists --project-name=${{ env.projname }}

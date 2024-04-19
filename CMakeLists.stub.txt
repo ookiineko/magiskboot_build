@@ -104,6 +104,23 @@ if (WIN32)
 endif()
 
 if (EMSCRIPTEN)
+    target_sources(magiskboot_exe PRIVATE
+        src/web-shims/conio_hack.cc)
+    set_source_files_properties(src/Magisk/native/src/boot/main.cpp PROPERTIES
+                                COMPILE_FLAGS -Dmain=__mbb_main)
+    target_link_libraries(magiskboot_exe embind)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--wrap=printf -Wl,--wrap=iprintf -Wl,--wrap=write")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--wrap=fprintf -Wl,--wrap=fiprintf -Wl,--wrap=exit")
+
+    message(STATUS "Using custom HTML wrapper")
+
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -sFORCE_FILESYSTEM -sEXPORTED_RUNTIME_METHODS=ENV,FS,TTY,callMain,abort,mbb_get_wasm_name,mbb_set_this_prog")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --pre-js=${CMAKE_CURRENT_SOURCE_DIR}/src/web-shims/impl.pre.js")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --js-library=${CMAKE_CURRENT_SOURCE_DIR}/src/web-shims/utils.lib.js")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --shell-file=${CMAKE_CURRENT_SOURCE_DIR}/src/web-shims/shfile.in.html")
+    set_target_properties(magiskboot_exe PROPERTIES LINK_DEPENDS
+                         "${CMAKE_CURRENT_SOURCE_DIR}/src/web-shims/impl.pre.js;${CMAKE_CURRENT_SOURCE_DIR}/src/web-shims/utils.lib.js;${CMAKE_CURRENT_SOURCE_DIR}/src/web-shims/shfile.in.html")
+
     message(STATUS "Using Emscripten mmap stubs")
 
     target_sources(platform_stubs PRIVATE

@@ -45,6 +45,8 @@ elseif (WIN32)
 elseif (CYGWIN)
     add_compile_definitions(__USE_LINUX_IOCTL_DEFS)
 elseif (EMSCRIPTEN)
+    set(CMAKE_EXECUTABLE_SUFFIX ".html")
+
     # exists in musl but not in rust libc crate
     list(APPEND RUSTFLAGS --cfg mbb_stubs_SYS_dup3)
 else()
